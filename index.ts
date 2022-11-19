@@ -1,7 +1,6 @@
+import { tasksRouter } from './src/tasks/tasks.router';
 import express, {
   Express,
-  Request,
-  Response,
 } from 'express';
 import dotenv from 'dotenv';
 import { DataSource } from 'typeorm';
@@ -29,10 +28,6 @@ export const AppDataSource = new DataSource({
 
 const port = process.env.PORT;
 
-app.get('/', (req: Request, res: Response) => {
-  res.send('Express + TS server');
-});
-
 AppDataSource.initialize()
   .then(() => {
     app.listen(port);
@@ -44,3 +39,5 @@ AppDataSource.initialize()
       err,
     );
   });
+
+  app.use('/', tasksRouter);
