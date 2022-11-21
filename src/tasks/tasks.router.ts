@@ -1,4 +1,4 @@
-import { createValidator } from './tasks.validator';
+import { createValidator, updateValidator } from './tasks.validator';
 import { taskController } from './tasks.controller';
 import { Router } from 'express';
 
@@ -10,4 +10,10 @@ tasksRouter.post(
   '/tasks',
   createValidator,
   taskController.create,
+);
+
+tasksRouter.put(
+  '/tasks',
+  updateValidator,
+  taskController.update,
 );

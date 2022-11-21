@@ -70,6 +70,42 @@ class TaskController {
         .status(500);
     }
   }
+
+  // update task
+  public async update(
+    req: Request,
+    res: Response,
+  ): Promise<Response> {
+    const errors = validationResult(res);
+    if (!errors.isEmpty()) {
+      res.status(400).json({ errors: errors.array() });
+    }
+
+    const newTask = new Task();
+
+    newTask.title = req.body.title;
+    newTask.date = req.body.date;
+    newTask.description = req.body.description;
+    newTask.priority = req.body.priority;
+    newTask.Status = req.body.status;
+
+    let createdTask: Task;
+
+    try {
+      createdTask = await AppDataSource.getRepository(
+        Task,
+      ).save(newTask);
+
+      createdTask = instanceToPlain(createdTask) as Task;
+
+      return res.json(createdTask).status(201);
+    } catch (error) {
+      console.log(error);
+      return res
+        .json({ error: 'Internal Server Error' })
+        .status(500);
+    }
+  }
 }
 
 export const taskController = new TaskController();
