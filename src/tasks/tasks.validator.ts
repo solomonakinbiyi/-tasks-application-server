@@ -38,7 +38,7 @@ export const createValidator: ValidationChain[] = [
     ),
 ];
 
-export const updateValidator = [
+export const updateValidator: ValidationChain[] = [
   body('id')
     .not()
     .isEmpty()
