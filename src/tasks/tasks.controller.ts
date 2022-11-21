@@ -1,6 +1,10 @@
-import { instanceToPlain } from 'class-transformer';
+import {
+  instanceToPlain,
+  plainToInstance,
+} from 'class-transformer';
 import { Request, Response } from 'express';
 import { validationResult } from 'express-validator';
+import { UpdateResult } from 'typeorm';
 import { AppDataSource } from './../../index';
 import { Task } from './task.entity';
 
@@ -26,7 +30,7 @@ class TaskController {
       return res.json(allTasks).status(200);
     } catch (_error) {
       console.log(
-        'There was an error fetching all tasks ==> ',
+        'There was an error while fetching all tasks ==> ',
         _error,
       );
       return res
@@ -63,8 +67,11 @@ class TaskController {
       createdTask = instanceToPlain(createdTask) as Task;
 
       return res.json(createdTask).status(201);
-    } catch (error) {
-      console.log(error);
+    } catch (_error) {
+      console.log(
+        'There was an error while creating a task ==> ',
+        _error,
+      );
       return res
         .json({ error: 'Internal Server Error' })
         .status(500);
@@ -81,26 +88,43 @@ class TaskController {
       res.status(400).json({ errors: errors.array() });
     }
 
-    const newTask = new Task();
-
-    newTask.title = req.body.title;
-    newTask.date = req.body.date;
-    newTask.description = req.body.description;
-    newTask.priority = req.body.priority;
-    newTask.Status = req.body.status;
-
-    let createdTask: Task;
+    let task: Task | null;
 
     try {
-      createdTask = await AppDataSource.getRepository(
+      task = await AppDataSource.getRepository(
         Task,
-      ).save(newTask);
+      ).findOne({
+        where: { id: req.body.id },
+      });
 
-      createdTask = instanceToPlain(createdTask) as Task;
+      if (!task) {
+        return res.status(404).json({
+          error:
+            'The task with the given Id does not exist',
+        });
+      }
 
-      return res.json(createdTask).status(201);
-    } catch (error) {
-      console.log(error);
+      let updatedTask: UpdateResult;
+
+      updatedTask = await AppDataSource.getRepository(
+        Task,
+      ).update(
+        req.body.id,
+        plainToInstance(Task, {
+          Status: req.body.status,
+        }),
+      );
+
+      updatedTask = instanceToPlain(
+        updatedTask,
+      ) as UpdateResult;
+
+      return res.json(updatedTask).status(200);
+    } catch (_error) {
+      console.log(
+        'There was an error while updating a task ==> ',
+        _error,
+      );
       return res
         .json({ error: 'Internal Server Error' })
         .status(500);
