@@ -9,7 +9,7 @@ import { AppDataSource } from './../../index';
 import { Task } from './task.entity';
 
 class TaskController {
-  // get all tasks method
+  // read all tasks
   public async getAll(
     req: Request,
     res: Response,
@@ -39,7 +39,7 @@ class TaskController {
     }
   }
 
-  // post task method
+  // create task
   public async create(
     req: Request,
     res: Response,
