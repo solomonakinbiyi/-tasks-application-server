@@ -44,9 +44,11 @@ class TaskController {
     req: Request,
     res: Response,
   ): Promise<Response> {
-    const errors = validationResult(res);
+    const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      res.status(400).json({ errors: errors.array() });
+      return res
+        .status(400)
+        .json({ errors: errors.array() });
     }
 
     const newTask = new Task();
@@ -83,9 +85,11 @@ class TaskController {
     req: Request,
     res: Response,
   ): Promise<Response> {
-    const errors = validationResult(res);
+    const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      res.status(400).json({ errors: errors.array() });
+      return res
+        .status(400)
+        .json({ errors: errors.array() });
     }
 
     let task: Task | null;
