@@ -57,7 +57,7 @@ class TaskController {
     newTask.date = req.body.date;
     newTask.description = req.body.description;
     newTask.priority = req.body.priority;
-    newTask.Status = req.body.status;
+    newTask.status = req.body.status;
 
     let createdTask: Task;
 
@@ -115,7 +115,7 @@ class TaskController {
       ).update(
         req.body.id,
         plainToInstance(Task, {
-          Status: req.body.status,
+          status: req.body.status,
         }),
       );
 

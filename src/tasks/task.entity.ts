@@ -1,10 +1,10 @@
-import { Status } from './../../../client/src/components/createTaskForm/enums/Status';
-import { Priority } from './../../../client/src/components/createTaskForm/enums/Priority';
 import {
   Column,
   Entity,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Priority } from '../enums/Priority';
+import { Status } from '../enums/Status';
 
 @Entity()
 export class Task {
@@ -39,5 +39,5 @@ export class Task {
     enum: Status,
     default: Status.todo,
   })
-  Status: Status;
+  status: Status;
 }
